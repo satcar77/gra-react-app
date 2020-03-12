@@ -12,6 +12,10 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
+import CustomModal from '.././components/modal'
+import { ADDRGETNETWORKPARAMS } from 'dns';
 function createData(id, date, name, shipTo, paymentMethod, amount) {
     return { id, date, name, shipTo, paymentMethod, amount };
   }
@@ -25,13 +29,14 @@ createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA â €â
 const useStyles = makeStyles(theme => ({
     Typography: {
       marginTop: theme.spacing(2),
-      marginLeft: theme.spacing(2),
+      flex:1,
     },
     Paper:{
         padding: theme.spacing(5),
-    }
+    },
   }));
 export default function Professor(){
+  const [open, setOpen] = React.useState(false);
     const classes = useStyles();
     const sections = [
         { title: 'Technology', url: '#' },
@@ -44,19 +49,30 @@ export default function Professor(){
         { title: 'Health', url: '#' },
         { title: 'Style', url: '#' },
         { title: 'Travel', url: '#' },]
-
+const handleOpen=()=>{
+  setOpen(true);
+}
+const state = {
+  'open' : open,
+  'setOpen':setOpen,
+  'title': "Add new RA",
+  'data': rows[0],
+  'buttonText': "Add"
+}
 
 return (
     <React.Fragment>
     <CssBaseline />
     <Container maxWidth="lg">
         <Header title="Title" sections={sections}/>
-
         <Paper className = {classes.Paper}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom className={classes.Typography}>
+          <Toolbar>
+        <Typography component="h2" variant="h5" color="primary" gutterBottom className={classes.Typography}>
             GRA List
         </Typography>
-      <Table size="small">
+        <Button className= {classes.addRAButton} variant="contained" onClick={handleOpen}>ADD NEW RA</Button>
+        </Toolbar>  
+        <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -81,6 +97,7 @@ return (
           ))}
         </TableBody>
       </Table>
+          <CustomModal state = {state}/>
       </Paper>
     </Container>
     </React.Fragment>
