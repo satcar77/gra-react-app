@@ -12,54 +12,96 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
-import CustomModal from '.././components/modal'
-import { ADDRGETNETWORKPARAMS } from 'dns';
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-    return { id, date, name, shipTo, paymentMethod, amount };
-  }
-const rows = [
-createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-];
+import { useSelector, useDispatch } from 'react-redux';
+import { selectGAList } from '.././slices/graSlice'; 
+import {getGraListThunk , addGraThunk} from '../actions/index'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import MenuItem from "@material-ui/core/MenuItem";
+import Modal from '@material-ui/core/Modal';
+import { IconButton } from '@material-ui/core';
+
+
 const useStyles = makeStyles(theme => ({
-    Typography: {
+  Modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },  
+  Typography: {
       marginTop: theme.spacing(2),
       flex:1,
     },
     Paper:{
         padding: theme.spacing(5),
     },
+    ModalInside: {
+      position: 'absolute',
+      width: 400,
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+    Form : {
+        '& .MuiTextField-root': {
+            margin: theme.spacing(1),
+            width: 300,
+    }
+    ,'& .MuiButton-root':{
+        margin: theme.spacing(1),
+        width: 300,
+    }
+}
   }));
+
+const Majors = ['Computer Science','Earth Science']
+const Degree = ['Masters','PhD']
+
+const sections = [
+    { title: 'Technology', url: '#' },
+    { title: 'Design', url: '#' },
+    { title: 'Culture', url: '#' },
+    { title: 'Business', url: '#' },
+    { title: 'Politics', url: '#' },
+    { title: 'Opinion', url: '#' },
+    { title: 'Science', url: '#' },
+    { title: 'Health', url: '#' },
+    { title: 'Style', url: '#' },
+    { title: 'Travel', url: '#' },]
+
 export default function Professor(){
-  const [open, setOpen] = React.useState(false);
-    const classes = useStyles();
-    const sections = [
-        { title: 'Technology', url: '#' },
-        { title: 'Design', url: '#' },
-        { title: 'Culture', url: '#' },
-        { title: 'Business', url: '#' },
-        { title: 'Politics', url: '#' },
-        { title: 'Opinion', url: '#' },
-        { title: 'Science', url: '#' },
-        { title: 'Health', url: '#' },
-        { title: 'Style', url: '#' },
-        { title: 'Travel', url: '#' },]
+const dispatch = useDispatch();
+const gaList = useSelector(selectGAList);
+const [open,setOpen] = React.useState(false);
+const [selection, setSelection] = React.useState({});
+const classes = useStyles();
+React.useEffect(()=>{
+  dispatch(getGraListThunk());
+},[]);
+
 const handleOpen=()=>{
   setOpen(true);
 }
-const state = {
-  'open' : open,
-  'setOpen':setOpen,
-  'title': "Add new RA",
-  'data': rows[0],
-  'buttonText': "Add"
+const handleClose=()=>{
+  setOpen(false);
 }
 
+const handleEditClick=(idx)=>{
+    setSelection(gaList[idx]);
+    handleOpen();
+}
+const handleAddNew=()=>{
+  setSelection({name:'',major:0,degree:0,skills:0});
+  handleOpen();
+}
+const handleChange=(event)=>{
+  setSelection({...selection,[event.target.name]: event.target.value});
+}
+const handleSubmit= async(e)=>{
+  e.preventDefault();
+  await addGraThunk(selection);
+}
 return (
     <React.Fragment>
     <CssBaseline />
@@ -70,7 +112,7 @@ return (
         <Typography component="h2" variant="h5" color="primary" gutterBottom className={classes.Typography}>
             GRA List
         </Typography>
-        <Button className= {classes.addRAButton} variant="contained" onClick={handleOpen}>ADD NEW RA</Button>
+        <Button className= {classes.addRAButton} variant="contained" onClick={handleAddNew}>ADD NEW RA</Button>
         </Toolbar>  
         <Table size="small">
         <TableHead>
@@ -83,21 +125,52 @@ return (
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {gaList.map((row,idx) => (
             <TableRow hover={true} key={row.id}>
-              <TableCell>{row.date}</TableCell>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
+              <TableCell>{row.degree}</TableCell>
+              <TableCell>{row.major}</TableCell>
+              <TableCell>{row.skills}</TableCell>
               <TableCell align="right">
+                <IconButton onClick={()=>handleEditClick(idx)}>
                 <EditOutlinedIcon/>
+                </IconButton>
+                <IconButton>
                 <DeleteOutlineOutlinedIcon />
+                </IconButton>
                 </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-          <CustomModal state = {state}/>
+        <Modal
+      className={classes.Modal}
+      open={open}
+      onClose = {handleClose}
+    >
+             <div className={classes.ModalInside}>
+    <h2>{selection.id === undefined ? "Add New RA" : "Edit RA"}</h2>
+    <form className={classes.Form} noValidate autoComplete="off">
+            <TextField name= "name" label="Name" value ={selection.name || ''} onChange={handleChange} variant="outlined" />
+            <TextField name="degree" label="Degree" value ={selection.degree } onChange={handleChange} select variant="outlined">
+            {Degree.map((option,idx) => (
+            <MenuItem key={idx} value={idx}>
+              {option}
+            </MenuItem>
+          ))}
+                </TextField>
+            <TextField name="major" label="Major" value ={selection.major} onChange={handleChange} select variant="outlined">
+            {Majors.map((option,idx) => (
+            <MenuItem key={idx} value={idx}>
+              {option}
+            </MenuItem>
+          ))}
+                </TextField>
+            <TextField name="skills" label="Skills" value={selection.skills || ''} onChange={handleChange} variant="outlined" />
+            <Button variant="contained" onClick={handleSubmit}>{selection.id === undefined ? "Add" : "Update"}</Button>
+    </form>
+    </div>
+          </Modal>
       </Paper>
     </Container>
     </React.Fragment>
