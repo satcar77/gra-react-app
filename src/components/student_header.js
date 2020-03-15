@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { selectInfo } from '.././slices/infoSlice'; 
 import { useSelector, useDispatch } from 'react-redux';
-import {getProfName} from '../actions/settings'
+import {getStudentName} from '../actions/settings'
 import {useParams} from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -38,7 +38,7 @@ export default function Header(props) {
   
 
   React.useEffect(()=>{
-    dispatch(getProfName(uid));
+    dispatch(getStudentName(uid));
   },[]);
   return (
     <React.Fragment>

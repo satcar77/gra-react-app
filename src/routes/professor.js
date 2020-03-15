@@ -15,13 +15,13 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import Toolbar from '@material-ui/core/Toolbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectGAList } from '.././slices/graSlice'; 
-import {getGraListThunk , addGraThunk} from '../actions/index'
+import {getGraListThunk, addGra, deleteGra, editGra} from '../actions/ra'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import MenuItem from "@material-ui/core/MenuItem";
 import Modal from '@material-ui/core/Modal';
 import { IconButton } from '@material-ui/core';
-
+import {useParams} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   Modal: {
@@ -55,20 +55,13 @@ const useStyles = makeStyles(theme => ({
 }
   }));
 
-const Majors = ['Computer Science','Earth Science']
-const Degree = ['Masters','PhD']
+export const Majors = ['Computer Science','Earth Science']
+export const Degree = ['Masters','PhD']
 
 const sections = [
-    { title: 'Technology', url: '#' },
-    { title: 'Design', url: '#' },
-    { title: 'Culture', url: '#' },
-    { title: 'Business', url: '#' },
-    { title: 'Politics', url: '#' },
-    { title: 'Opinion', url: '#' },
-    { title: 'Science', url: '#' },
-    { title: 'Health', url: '#' },
-    { title: 'Style', url: '#' },
-    { title: 'Travel', url: '#' },]
+    { title: 'Research Assistants', url: '#' },
+    { title: 'Tasks', url: '#' },
+    { title: 'Settings', url: '#' },]
 
 export default function Professor(){
 const dispatch = useDispatch();
@@ -76,8 +69,9 @@ const gaList = useSelector(selectGAList);
 const [open,setOpen] = React.useState(false);
 const [selection, setSelection] = React.useState({});
 const classes = useStyles();
+const {uid} = useParams();
 React.useEffect(()=>{
-  dispatch(getGraListThunk());
+  dispatch(getGraListThunk(uid));
 },[]);
 
 const handleOpen=()=>{
@@ -92,7 +86,7 @@ const handleEditClick=(idx)=>{
     handleOpen();
 }
 const handleAddNew=()=>{
-  setSelection({name:'',major:0,degree:0,skills:0});
+  setSelection({name:'',major:0,degree:0,skills:0,profid:uid});
   handleOpen();
 }
 const handleChange=(event)=>{
@@ -100,7 +94,16 @@ const handleChange=(event)=>{
 }
 const handleSubmit= async(e)=>{
   e.preventDefault();
-  await addGraThunk(selection);
+  if (selection.id === undefined)
+    await addGra(selection);
+  else
+    await editGra(selection);
+  handleClose();
+  dispatch(getGraListThunk(uid));
+}
+const handleDelete= async(idx)=>{
+  await deleteGra(gaList[idx].id);
+  dispatch(getGraListThunk(uid));
 }
 return (
     <React.Fragment>
@@ -128,15 +131,15 @@ return (
           {gaList.map((row,idx) => (
             <TableRow hover={true} key={row.id}>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.degree}</TableCell>
-              <TableCell>{row.major}</TableCell>
+              <TableCell>{Degree[row.degree]}</TableCell>
+              <TableCell>{Majors[row.major]}</TableCell>
               <TableCell>{row.skills}</TableCell>
               <TableCell align="right">
                 <IconButton onClick={()=>handleEditClick(idx)}>
                 <EditOutlinedIcon/>
                 </IconButton>
-                <IconButton>
-                <DeleteOutlineOutlinedIcon />
+                <IconButton onClick={()=>handleDelete(idx)}>
+                <DeleteOutlineOutlinedIcon/>
                 </IconButton>
                 </TableCell>
             </TableRow>
