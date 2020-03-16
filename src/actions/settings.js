@@ -38,3 +38,12 @@ export async function editProfName(data) {
       dispatch(dataLoaded(data));
     };
   }
+  export async function addNewProfessor(name) {
+      const res = await fetch('http://localhost:4000/settings/addNewProfessor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({name}),
+      });
+      const data = await res.json();
+      return data;
+  }

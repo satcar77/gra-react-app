@@ -37,3 +37,11 @@ export async function editGra(data) {
     })
 }
 
+export async function updateStatus(data) {
+  await fetch('http://localhost:4000/gra/updateStatus', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+}
+

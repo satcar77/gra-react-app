@@ -3,11 +3,6 @@ import Header from '../components/student_header'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container'
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -15,21 +10,16 @@ import FaceIcon from '@material-ui/icons/Face';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import SchoolIcon from '@material-ui/icons/School';
 import PersonIcon from '@material-ui/icons/Person';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import Toolbar from '@material-ui/core/Toolbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectInfo } from '../slices/infoSlice'; 
-import {getGraListThunk, addGra, deleteGra, editGra} from '../actions/ra'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import MenuItem from "@material-ui/core/MenuItem";
-import Modal from '@material-ui/core/Modal';
-import { IconButton } from '@material-ui/core';
 import {useParams} from 'react-router-dom';
 import Chip from '@material-ui/core/Chip';
 import {Degree,Majors} from './professor';
 import {getProfNameNoThunk} from '../actions/settings';
-import {getTaskListThunkStudent} from '../actions/task';
+import {getTaskListThunkStudent,studentUpdateCompletion} from '../actions/task';
+import {updateStatus} from '../actions/ra';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/core/Slider';
@@ -45,6 +35,12 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(5),
         margin: theme.spacing(4),
     },
+    Button:{
+      marginLeft: theme.spacing(4),
+    },
+    Divider:{
+      marginRight:theme.spacing(3),
+    }
 }));
 
 
@@ -61,22 +57,54 @@ const info = useSelector(selectInfo);
 const taskList = useSelector(selectTaskList);
 const [profInfo,setProfInfo] = React.useState({name:''});
 const [sliderVal, setSliderVal] =React.useState([]);
+const [status,setStatus] = React.useState('');
 const loadProfInfo = async ()=>{
   const pinfo = await getProfNameNoThunk(info.created_by);
   setProfInfo(pinfo[0]);
 }
 React.useEffect(()=>{
   dispatch(getTaskListThunkStudent(uid));
-  if(info.created_by)
-  loadProfInfo();
-},[info.name]);
+  updateCompletion();
+  if(info.created_by){
+    loadProfInfo();
+    setStatus(info.status);
+  }
+},[info.name,taskList.length]);
 const handleSliderChange = name => (e, value) => {
   setSliderVal({ ...sliderVal,
     [name]: value
   });
 }
-const update =()=>{
-  console.log(sliderVal);
+const updateCompletion= ()=>{
+  const l={};
+  taskList.map((row)=>{
+    l[row.id]=row.completion; 
+  })
+  setSliderVal(l);
+}
+const update =async ()=>{
+  try{
+  await studentUpdateCompletion(sliderVal);
+  alert("Update Success!")
+}
+  catch(err){
+    console.log(err)
+      alert("Update Failed!")
+  }
+}
+const onChangedStatus=(e)=>{
+  setStatus(e.target.value);
+}
+const updateStatusClick =async()=>{
+  try{
+    await updateStatus({id:uid,status:status});
+    alert("Update Success!")
+    
+  }
+  catch(err){
+    console.log(err)
+    alert("Update Failed!");
+  }
 }
 return (
     <React.Fragment>
@@ -86,8 +114,9 @@ return (
         <Paper className = {classes.Paper}>
         <Typography variant="h4" color= "primary" component="h4">
         {info.name}
-     
         </Typography>
+        <Grid container justify="space-between">
+        <Grid item xs>
         <Box>
         <Chip icon={<FaceIcon/>} color="primary" className={classes.Chip} variant= "outlined" label={info.skills}/>
         </Box>
@@ -98,8 +127,15 @@ return (
        <Box>
        <Chip icon={<PersonIcon/>} className={classes.Chip} variant= "outlined" label= {"Professor : "+ profInfo.name}/>
          </Box>
+         </Grid>
+         <Divider className={classes.Divider} orientation="vertical" flexItem />
+         <Grid item xs>
+        <TextField name="status" multiline rows="3" label="Status" onChange={onChangedStatus} value={status} fullWidth variant="outlined"/>
+        <Button variant="contained" color="primary" onClick={updateStatusClick}>Update Status</Button>
+           </Grid>
+         </Grid>
         </Paper>
-        <Button variant="contained" onClick={update}>Update</Button>
+        <Button variant="contained" className={classes.Button} onClick={update}>Update</Button>
         {taskList.map((row)=>(
         <Paper className = {classes.Paper} key={row.id}>
       <Grid container alignItems="center">
@@ -120,14 +156,15 @@ return (
         </Typography>
         <Divider/>
         <Typography gutterBottom>
-            {"Percentage Completion: " }
+            Percentage Completion:{sliderVal[row.id]?sliderVal[row.id]:0}%
         </Typography>
         <Slider
-        defaultValue={30}
+        defaultValue={0}
         id = {row.id}
         aria-labelledby="discrete-slider"
         valueLabelDisplay="auto"
         step={10}
+        value={sliderVal[row.id] ? sliderVal[row.id] : 0}
         marks
         min={10}
         onChange={handleSliderChange(row.id)}

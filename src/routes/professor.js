@@ -22,6 +22,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Modal from '@material-ui/core/Modal';
 import { IconButton } from '@material-ui/core';
 import {useParams} from 'react-router-dom';
+import StudentProfile from '../components/student_profile'
+import {getTaskListThunkStudent} from '../actions/task';
+import { selectTaskList } from '../slices/taskSlice';
 
 const useStyles = makeStyles(theme => ({
   Modal: {
@@ -34,6 +37,7 @@ const useStyles = makeStyles(theme => ({
       flex:1,
     },
     Paper:{
+        marginTop: theme.spacing(5),
         padding: theme.spacing(5),
     },
     ModalInside: {
@@ -51,8 +55,14 @@ const useStyles = makeStyles(theme => ({
     ,'& .MuiButton-root':{
         margin: theme.spacing(1),
         width: 300,
-    }
-}
+    },
+},
+Divider:{
+  marginRight:theme.spacing(3),
+},
+Chip:{
+  margin:theme.spacing(1)
+},
   }));
 
 export const Majors = ['Computer Science','Earth Science']
@@ -66,6 +76,7 @@ const sections = [
 export default function Professor(){
 const dispatch = useDispatch();
 const gaList = useSelector(selectGAList);
+const taskList = useSelector(selectTaskList);
 const [open,setOpen] = React.useState(false);
 const [selection, setSelection] = React.useState({});
 const classes = useStyles();
@@ -73,7 +84,9 @@ const {uid} = useParams();
 React.useEffect(()=>{
   dispatch(getGraListThunk(uid));
 },[]);
-
+const loadTaskData=(id)=>{
+  dispatch(getTaskListThunkStudent(id))
+}
 const handleOpen=()=>{
   setOpen(true);
 }
@@ -105,6 +118,10 @@ const handleDelete= async(idx)=>{
   await deleteGra(gaList[idx].id);
   dispatch(getGraListThunk(uid));
 }
+const select = (idx)=>{
+  setSelection(gaList[idx]);
+  loadTaskData(gaList[idx].id);
+}
 return (
     <React.Fragment>
     <CssBaseline />
@@ -129,7 +146,7 @@ return (
         </TableHead>
         <TableBody>
           {gaList.map((row,idx) => (
-            <TableRow hover={true} key={row.id}>
+            <TableRow hover={true} key={row.id} onClick={()=>select(idx)}>
               <TableCell>{row.name}</TableCell>
               <TableCell>{Degree[row.degree]}</TableCell>
               <TableCell>{Majors[row.major]}</TableCell>
@@ -175,6 +192,8 @@ return (
     </div>
           </Modal>
       </Paper>
+      {selection.id !==undefined?<StudentProfile classes = {classes} selection ={selection} taskList={taskList}/>:''}
+
     </Container>
     </React.Fragment>
 );
