@@ -20,27 +20,18 @@ import { selectTaskList } from '../slices/taskSlice';
 import {useParams} from 'react-router-dom';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Box from '@material-ui/core/Box'
-const sections = [
-    { title: 'Technology', url: '#' },
-    { title: 'Design', url: '#' },
-    { title: 'Culture', url: '#' },
-    { title: 'Business', url: '#' },
-    { title: 'Politics', url: '#' },
-    { title: 'Opinion', url: '#' },
-    { title: 'Science', url: '#' },
-    { title: 'Health', url: '#' },
-    { title: 'Style', url: '#' },
-    { title: 'Travel', url: '#' },]
-    const useStyles = makeStyles(theme => ({
-        Typography: {
-            marginTop: theme.spacing(2),
-            flex:1,
-          },
-          Paper:{
-              padding: theme.spacing(5),
-          },
-          
-        }));
+
+const useStyles = makeStyles(theme => ({
+    Typography: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+
+      },
+      Paper:{
+          padding: theme.spacing(5),
+      },
+      
+    }));
 
 export default function StudentTaskView(){
     const dispatch = useDispatch();
@@ -55,13 +46,11 @@ export default function StudentTaskView(){
         <React.Fragment>
         <CssBaseline />
         <Container maxWidth="lg">
-            <Header title="Task List" sections={sections}/>
+            <Header/>
             <Paper className = {classes.Paper}>
-              <Toolbar>
             <Typography component="h2" variant="h5" color="primary" gutterBottom className={classes.Typography}>
                 Task list from the professor
             </Typography>
-            </Toolbar>  
             <Table size="small">
             <TableHead>
               <TableRow>

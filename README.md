@@ -1,22 +1,34 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+This project was made with [React](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/).
 
-## Available Scripts
+## Steps to run in your local machine
+
+### `Run gra-api in localhost`
+This app sends API requests for data exchange to localhost on port 4000.
 
 In the project directory, you can run:
+### `npm install`
+Installs all the dependencies from package.json<br />
 
 ### `npm start`
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Entry Points
 
+Authorization,authentication and session handling was out of scope of the task requirements and are not implemented. 
+* Base URL [http://localhost:3000](http://localhost:3000) redirects to professor dashboard access page which requests for professor ID. Professor can create a new account using [http://localhost:3000/professor/register](http://localhost:3000/professor/register). A unique ID is given upon registration and can be used to login through [http://localhost:3000/professor/login](http://localhost:3000/professor/login)
+
+* Students can access the login page through [http://localhost:3000/student/login](http://localhost:3000/student/login). Students do not have the ability to create an account. To access the student's dashboard, the student has to enter the same ID that was automatically generated and assigned to the student through professor's dashboard.
+
+## Database
+The database configuration is not necessary. The MySQL database for the project is hosted remotely. 
+
+The ER Diagram for the database is provided in the README.md  file of the API repo. 
+
+## For Production (Optional)
 ### `npm run build`
 
 Builds the app for production to the `build` folder.<br />
@@ -37,32 +49,12 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+##Screenshots
+![1](./screenshots/1.png)
+![2](./screenshots/2.png)
+![3](./screenshots/3.png)
+![4](./screenshots/4.png)
+![5](./screenshots/5.png)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

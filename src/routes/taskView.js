@@ -27,17 +27,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { selectGAList } from '../slices/graSlice';
 import { selectTaskList } from '../slices/taskSlice';
 import {useParams} from 'react-router-dom';
-const sections = [
-    { title: 'Technology', url: '#' },
-    { title: 'Design', url: '#' },
-    { title: 'Culture', url: '#' },
-    { title: 'Business', url: '#' },
-    { title: 'Politics', url: '#' },
-    { title: 'Opinion', url: '#' },
-    { title: 'Science', url: '#' },
-    { title: 'Health', url: '#' },
-    { title: 'Style', url: '#' },
-    { title: 'Travel', url: '#' },]
+
     const useStyles = makeStyles(theme => ({
         Modal: {
           display: 'flex',
@@ -122,7 +112,7 @@ export default function TaskView(){
         <React.Fragment>
         <CssBaseline />
         <Container maxWidth="lg">
-            <Header title="Professor Dashboard" sections={sections}/>
+            <Header/>
             <Paper className = {classes.Paper}>
               <Toolbar>
             <Typography component="h2" variant="h5" color="primary" gutterBottom className={classes.Typography}>

@@ -37,17 +37,19 @@ const useStyles = makeStyles(theme => ({
     },
     Button:{
       marginLeft: theme.spacing(4),
+      marginBottom: theme.spacing(4),
+    },
+    Button2:{
+      marginTop:theme.spacing(2),
     },
     Divider:{
       marginRight:theme.spacing(3),
+    },
+    Slider:{
+      marginTop:theme.spacing(2),
     }
 }));
 
-
-const sections = [
-    { title: 'Research Assistants', url: '#' },
-    { title: 'Tasks', url: '#' },
-    { title: 'Settings', url: '#' },]
 
 export default function StudentHome(){
 const dispatch = useDispatch();
@@ -110,7 +112,7 @@ return (
     <React.Fragment>
     <CssBaseline />
     <Container maxWidth="lg">
-        <Header title="Student Dashboard" sections={sections}/>
+        <Header/>
         <Paper className = {classes.Paper}>
         <Typography variant="h4" color= "primary" component="h4">
         {info.name}
@@ -131,16 +133,15 @@ return (
          <Divider className={classes.Divider} orientation="vertical" flexItem />
          <Grid item xs>
         <TextField name="status" multiline rows="3" label="Status" onChange={onChangedStatus} value={status} fullWidth variant="outlined"/>
-        <Button variant="contained" color="primary" onClick={updateStatusClick}>Update Status</Button>
+        <Button variant="contained" className={classes.Button2} onClick={updateStatusClick}>Update Status</Button>
            </Grid>
          </Grid>
         </Paper>
-        <Button variant="contained" className={classes.Button} onClick={update}>Update</Button>
         {taskList.map((row)=>(
         <Paper className = {classes.Paper} key={row.id}>
       <Grid container alignItems="center">
           <Grid item xs>
-            <Typography gutterBottom variant="h5">
+            <Typography color="primary" gutterBottom variant="h5">
               {row.name}
             </Typography>
           </Grid>
@@ -154,24 +155,26 @@ return (
           <Typography className={classes.Typography} color="textSecondary" variant="body2">
             {row.details}
         </Typography>
-        <Divider/>
-        <Typography gutterBottom>
-            Percentage Completion:{sliderVal[row.id]?sliderVal[row.id]:0}%
-        </Typography>
         <Slider
+        className={classes.Slider}
         defaultValue={0}
         id = {row.id}
         aria-labelledby="discrete-slider"
         valueLabelDisplay="auto"
-        step={10}
+        step={5}
         value={sliderVal[row.id] ? sliderVal[row.id] : 0}
         marks
-        min={10}
+        min={0}
         onChange={handleSliderChange(row.id)}
         max={100}
       />
+          <Typography variant="h6" gutterBottom>
+            {sliderVal[row.id]?sliderVal[row.id]:0}% completed
+        </Typography>
             </Paper>
         ))}
+        <Button variant="contained" className={classes.Button} onClick={update}>Update Progress</Button>
+
 
     </Container>
     </React.Fragment>

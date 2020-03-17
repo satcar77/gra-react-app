@@ -31,7 +31,7 @@ export default function studentProfile(props){
          <Divider className={classes.Divider} orientation="vertical" flexItem />
          <Grid item xs>
         
-         <Typography variant="h5" color= "textSecondary">
+         <Typography variant="h6" color= "primary">
             Student Status
         </Typography>
          <Typography variant="body2" color= "textSecondary">
@@ -39,7 +39,8 @@ export default function studentProfile(props){
         </Typography>
            </Grid>
          </Grid>
-         <Table size="small">
+         <Divider className={classes.Divider}/>
+         <Table className={classes.Table} size="small">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>

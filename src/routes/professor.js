@@ -57,8 +57,12 @@ const useStyles = makeStyles(theme => ({
         width: 300,
     },
 },
+Table:{
+  marginTop:theme.spacing(4),
+},
 Divider:{
   marginRight:theme.spacing(3),
+  marginTop:theme.spacing(3),
 },
 Chip:{
   margin:theme.spacing(1)
@@ -68,10 +72,7 @@ Chip:{
 export const Majors = ['Computer Science','Earth Science']
 export const Degree = ['Masters','PhD']
 
-const sections = [
-    { title: 'Research Assistants', url: '#' },
-    { title: 'Tasks', url: '#' },
-    { title: 'Settings', url: '#' },]
+
 
 export default function Professor(){
 const dispatch = useDispatch();
@@ -126,7 +127,7 @@ return (
     <React.Fragment>
     <CssBaseline />
     <Container maxWidth="lg">
-        <Header title="Title" sections={sections}/>
+        <Header/>
         <Paper className = {classes.Paper}>
           <Toolbar>
         <Typography component="h2" variant="h5" color="primary" gutterBottom className={classes.Typography}>
@@ -137,6 +138,7 @@ return (
         <Table size="small">
         <TableHead>
           <TableRow>
+          <TableCell>Student ID</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Degree</TableCell>
             <TableCell>Major</TableCell>
@@ -147,6 +149,7 @@ return (
         <TableBody>
           {gaList.map((row,idx) => (
             <TableRow hover={true} key={row.id} onClick={()=>select(idx)}>
+              <TableCell>{row.id}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{Degree[row.degree]}</TableCell>
               <TableCell>{Majors[row.major]}</TableCell>

@@ -10,7 +10,8 @@ import Link from '@material-ui/core/Link';
 import { selectInfo } from '.././slices/infoSlice'; 
 import { useSelector, useDispatch } from 'react-redux';
 import {getProfName} from '../actions/settings'
-import {useParams} from 'react-router-dom';
+import {useParams,useRouteMatch} from 'react-router-dom';
+
 const useStyles = makeStyles(theme => ({
   toolbar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -19,7 +20,6 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
   },
   toolbarSecondary: {
-    justifyContent: 'space-between',
     overflowX: 'auto',
     marginBottom: theme.spacing(3),
   },
@@ -28,14 +28,17 @@ const useStyles = makeStyles(theme => ({
     flexShrink: 0,
   },
 }));
-
+const sections = [
+  { title: 'Research Assistants', url: '/home' },
+  { title: 'Tasks', url: '/tasks' },
+  { title: 'Settings', url: '/settings' },]
 export default function Header(props) {
   const classes = useStyles();
-  const { sections, title } = props;
+  const { title } = props;
   const dispatch = useDispatch();
   const {uid} = useParams();
   const pinfo = useSelector(selectInfo);
-  
+  const match = useRouteMatch();
 
   React.useEffect(()=>{
     dispatch(getProfName(uid));
@@ -43,7 +46,7 @@ export default function Header(props) {
   return (
     <React.Fragment>
       <Toolbar className={classes.toolbar}>
-        <Button size="small">Subscribe</Button>
+        <Button size="small"><Link color="inherit" href='/student/login'>Student's Portal</Link></Button>
         <Typography
           component="h2"
           variant="h5"
@@ -52,11 +55,8 @@ export default function Header(props) {
           noWrap
           className={classes.toolbarTitle}
         >
-          {title}
+          Professor Dashboard
         </Typography>
-        <IconButton>
-          <SearchIcon />
-        </IconButton>
         <Button variant="outlined" size="small">
           { pinfo.name }
         </Button>
@@ -68,7 +68,7 @@ export default function Header(props) {
             noWrap
             key={section.title}
             variant="body2"
-            href={section.url}
+            href={`/professor/${uid}${section.url}`}
             className={classes.toolbarLink}
           >
             {section.title}

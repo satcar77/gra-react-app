@@ -25,10 +25,6 @@ const useStyles = makeStyles(theme => ({
   }));
 
 
-const sections = [
-    { title: 'Research Assistants', url: '#' },
-    { title: 'Tasks', url: '#' },
-    { title: 'Settings', url: '#' },]
 
 export default function SettingsProfessor(){
     const classes = useStyles();
@@ -58,7 +54,7 @@ return (
     <React.Fragment>
     <CssBaseline />
     <Container maxWidth="lg">
-        <Header title="Title" sections={sections}/>
+        <Header/>
         <Paper className = {classes.Paper}>
         <Typography component="h2" variant="h5" color="primary" gutterBottom className={classes.Typography}>Personal Settings</Typography>  
 <Typography component="h6" variant="h6" gutterBottom className={classes.Typography}>Your professor ID is {uid}</Typography>  

@@ -19,7 +19,6 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
   },
   toolbarSecondary: {
-    justifyContent: 'space-between',
     overflowX: 'auto',
     marginBottom: theme.spacing(3),
   },
@@ -29,9 +28,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Header(props) {
+const sections = [
+  { title: 'Home', url: '/home' },
+  { title: 'Tasks List', url: '/tasks' },]
+export default function Header() {
   const classes = useStyles();
-  const { sections, title } = props;
   const dispatch = useDispatch();
   const {uid} = useParams();
   const pinfo = useSelector(selectInfo);
@@ -43,7 +44,7 @@ export default function Header(props) {
   return (
     <React.Fragment>
       <Toolbar className={classes.toolbar}>
-        <Button size="small">Subscribe</Button>
+        <Button size="small"><Link color="inherit" href='/professor/login'>Professor's Portal</Link></Button>
         <Typography
           component="h2"
           variant="h5"
@@ -52,13 +53,13 @@ export default function Header(props) {
           noWrap
           className={classes.toolbarTitle}
         >
-          {title}
+          Student Dashboard
         </Typography>
         <IconButton>
           <SearchIcon />
         </IconButton>
         <Button variant="outlined" size="small">
-          { pinfo.name }
+          {pinfo.name}
         </Button>
       </Toolbar>
       <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
@@ -68,7 +69,7 @@ export default function Header(props) {
             noWrap
             key={section.title}
             variant="body2"
-            href={section.url}
+            href={`/student/${uid}${section.url}`}
             className={classes.toolbarLink}
           >
             {section.title}
