@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 export default function Register() {
   const classes = useStyles();
   const history= useHistory();
-  const [id,setId] = useState('Enter your professor id');
+  const [id,setId] = useState('');
   const onLoginClicked=async(e)=>{
     e.preventDefault();
     const res =  await addNewProfessor(id);

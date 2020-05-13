@@ -100,7 +100,7 @@ const handleEditClick=(idx)=>{
     handleOpen();
 }
 const handleAddNew=()=>{
-  setSelection({name:'',major:0,degree:0,skills:0,profid:uid});
+  setSelection({name:'',major:0,degree:0,skills:0});
   handleOpen();
 }
 const handleChange=(event)=>{
@@ -109,14 +109,14 @@ const handleChange=(event)=>{
 const handleSubmit= async(e)=>{
   e.preventDefault();
   if (selection.id === undefined)
-    await addGra(selection);
+    await addGra(selection,uid);
   else
-    await editGra(selection);
+    await editGra(selection,uid);
   handleClose();
   dispatch(getGraListThunk(uid));
 }
 const handleDelete= async(idx)=>{
-  await deleteGra(gaList[idx].id);
+  await deleteGra(gaList[idx].id,uid);
   dispatch(getGraListThunk(uid));
 }
 const select = (idx)=>{

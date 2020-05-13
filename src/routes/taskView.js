@@ -86,14 +86,14 @@ export default function TaskView(){
       setSelection({...selection,[event.target.name]: event.target.value});
     };
     const handleDelete= async(idx)=>{
-      await deleteTask(taskList[idx].id);
+      await deleteTask(taskList[idx].id,uid);
       dispatch(getTaskListThunk(uid));
     };
     const handleSubmit = async ()=>{
       if(selection.id === undefined)
         await addTask(selection);
       else
-        await editTask(selection);
+        await editTask(selection,uid);
         handleClose();
        dispatch(getTaskListThunk(uid));
     };

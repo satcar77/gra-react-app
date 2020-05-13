@@ -14,7 +14,7 @@ export default function studentProfile(props){
     const {classes,selection,taskList} = props;
     return(
         <React.Fragment>
-        <Paper className={classes.Paper}>
+        <Paper className={classes.Paper} style={{marginBottom:'50px'}}>
          <Typography variant="h4" color= "primary" component="h4">
         {selection.name}
         </Typography>
